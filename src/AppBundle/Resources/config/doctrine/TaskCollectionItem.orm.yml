@@ -27,7 +27,7 @@ AppBundle\Entity\TaskCollectionItem:
         task:
             targetEntity: AppBundle\Entity\Task
             cascade:
-                - persist
+                - all
             fetch: LAZY
             joinColumns:
                 task_id:
