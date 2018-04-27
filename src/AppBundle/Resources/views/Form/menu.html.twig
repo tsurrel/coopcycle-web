@@ -82,47 +82,51 @@
       </div>
     </div>
     <div id="{{ collapseSelector }}" class="menuForm__menuItem__body collapse">
-      <div class="form-group row">
-        <div class="col-sm-3">
-          {{ form_label(form.price) }}
-          {{ form_widget(form.price, { attr: { class: 'input-sm text-right' } }) }}
+      <section class="menuForm__menuItem__body__priceDesc">
+        <div class="form-group row">
+          <div class="col-sm-3">
+            {{ form_label(form.price) }}
+            {{ form_widget(form.price, { attr: { class: 'input-sm text-right' } }) }}
+          </div>
+          <div class="col-sm-3">
+            {{ form_label(form.taxCategory, 'VAT'|trans([], 'messages')) }}
+            {{ form_widget(form.taxCategory, { attr: { class: 'input-sm' } }) }}
+          </div>
         </div>
-        <div class="col-sm-3">
-          {{ form_label(form.taxCategory, 'VAT'|trans([], 'messages')) }}
-          {{ form_widget(form.taxCategory, { attr: { class: 'input-sm' } }) }}
+        <div class="form-group show-description">
+          <div>
+            <a class="text-muted"
+              data-toggle="collapse" data-target="#{{ containerSelector }}"
+              aria-expanded="false" aria-controls="{{ containerSelector }}">
+              {# form.vars may be null when used for prototype #}
+              {% if form.vars.value and form.vars.value.description %}
+                <i class="fa fa-pencil"></i>  <small>{% trans %}restaurant.menu.form.modifyDescription{% endtrans %}</small>
+              {% else %}
+                <i class="fa fa-plus"></i>  <small>{% trans %}restaurant.menu.form.addDescription{% endtrans %}</small>
+              {% endif %}
+            </a>
+          </div>
         </div>
-      </div>
-      <div class="form-group show-description">
-        <div>
-          <a class="text-muted"
-            data-toggle="collapse" data-target="#{{ containerSelector }}"
-            aria-expanded="false" aria-controls="{{ containerSelector }}">
-            {# form.vars may be null when used for prototype #}
-            {% if form.vars.value and form.vars.value.description %}
-              <i class="fa fa-pencil"></i>  <small>{% trans %}restaurant.menu.form.modifyDescription{% endtrans %}</small>
-            {% else %}
-              <i class="fa fa-plus"></i>  <small>{% trans %}restaurant.menu.form.addDescription{% endtrans %}</small>
-            {% endif %}
-          </a>
+        <div class="form-group row collapse" id="{{ containerSelector }}">
+          <div class="col-sm-8">
+            {{ form_label(form.description) }}
+            {{ form_widget(form.description, { attr: { class: 'input-sm' } }) }}
+          </div>
         </div>
-      </div>
-      <div class="form-group row collapse" id="{{ containerSelector }}">
-        <div class="col-sm-8">
-          {{ form_label(form.description) }}
-          {{ form_widget(form.description, { attr: { class: 'input-sm' } }) }}
+      </section>
+      <section class="menuForm__menuItem__body__optionsHeading">
+        <div class="row">
+          <div class="col-sm-6">
+            <strong>{% trans %}restaurant.menu.form.extraGroups{% endtrans %}</strong>
+          </div>
+          <div class="col-sm-6 text-right">
+            <button type="button" class="btn btn-xs btn-success"
+              data-toggle="add-menu-item-modifier-group" data-target="{{ '#' ~ form.modifiers.vars.id }}">
+              <i class="fa fa-plus"></i> {% trans %}restaurant.menu.form.addExtraGroup{% endtrans %}
+            </button>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-6">
-          <label class="control-label">{% trans %}restaurant.menu.form.extraGroups{% endtrans %}</label>
-        </div>
-        <div class="col-sm-6 text-right">
-          <button type="button" class="btn btn-xs btn-success"
-            data-toggle="add-menu-item-modifier-group" data-target="{{ '#' ~ form.modifiers.vars.id }}">
-            <i class="fa fa-plus"></i> {% trans %}restaurant.menu.form.addExtraGroup{% endtrans %}
-          </button>
-        </div>
-      </div>
+      </section>
       {{ form_widget(form.modifiers) }}
     </div>
   </div>
@@ -144,28 +148,36 @@
   {% trans %}menu.modifier.STRATEGY_ADD_MENUITEM_PRICE.description{% endtrans %}
 {% endset %}
 <div id="{{ form.vars.id }}" class="menu-item-modifiers">
-  <div class="form-group row">
-    <div class="col-sm-6">
-      {{ form_label(form.name) }}
-      {{ form_widget(form.name, { attr: { class: 'input-sm' } }) }}
+  <section class="menuForm__menuItem__optionHeading">
+    <div class="row">
+      <div class="col-sm-6">
+        {# {{ form_label(form.name, null, { label_attr: { class: 'sr-only' } }) }} #}
+        {{ form_widget(form.name, { attr: { class: 'input-sm' } }) }}
+        <small style="margin-bottom: 0;" class="help-block">{{ form.name.vars.label|trans }}</small>
+      </div>
+      <div class="col-sm-3">
+        {# {{ form_label(form.calculusStrategy) }}  #}
+        <div style="position: relative;">
+          {{ form_widget(form.calculusStrategy, { attr: { class: 'modifier-calculus-strategy input-sm', style: 'width: 90%;' } }) }}
+          <a style="position: absolute; right: 0; top: 4px;"
+            data-toggle="tooltip" data-placement="top" data-html="true" title="{{ tooltip }}">
+            <i class="fa fa-info-circle"></i>
+          </a>
+        </div>
+        <small style="margin-bottom: 0;" class="help-block">{{ form.calculusStrategy.vars.label|trans }}</small>
+      </div>
+      <div class="col-sm-2">
+        {{ form_label(form.price, null, { label_attr: { class: 'modifier-group-price-label' } }) }}
+        {{ form_widget(form.price, { attr: { class: 'modifier-group-price input-sm' } }) }}
+      </div>
+      <div class="col-sm-1">
+        <button type="button" class="close" aria-label="Close" tabindex="-1"
+          data-target="{{ '#' ~ form.vars.id }}">
+          <i class="fa fa-trash"></i>
+        </button>
+      </div>
     </div>
-    <div class="col-sm-3">
-      {{ form_label(form.calculusStrategy) }}  <a data-toggle="tooltip" data-placement="top" data-html="true" title="{{ tooltip }}">
-        <i class="fa fa-info-circle"></i>
-      </a>
-      {{ form_widget(form.calculusStrategy, { attr: { class: 'modifier-calculus-strategy input-sm' } }) }}
-    </div>
-    <div class="col-sm-2">
-      {{ form_label(form.price, null, { label_attr: { class: 'modifier-group-price-label' } }) }}
-      {{ form_widget(form.price, { attr: { class: 'modifier-group-price input-sm' } }) }}
-    </div>
-    <div class="col-sm-1">
-      <button type="button" class="close" aria-label="Close" tabindex="-1"
-        data-target="{{ '#' ~ form.vars.id }}">
-        <i class="fa fa-trash"></i>
-      </button>
-    </div>
-  </div>
+  </section>
   <h6 class="text-muted">{% trans %}restaurant.menu.form.extras{% endtrans %} ({{ form.modifierChoices.vars.value|length }})</h6>
   {{ form_widget(form.modifierChoices) }}
   <button type="button" class="btn btn-xs btn-success" data-toggle="add-menu-item-modifier">
